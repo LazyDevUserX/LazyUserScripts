@@ -1,21 +1,25 @@
 # Userscripts
-Userscript requirements: [Tampermonkey](https://www.tampermonkey.net/)
-[ViolentMonkey](https://addons.mozilla.org/en-US/firefox/addon/styl-us/)
+Userscript requirements: [Tampermonkey](https://www.tampermonkey.net/) Or
+[Violentmonkey](https://violentmonkey.github.io/)
 
 Image previews will be within the dropdown arrows.
 
 ---
+### <img src="http://new.circleftp.net/static/media/logo.fce2c9029060a10687b8.png"> CircleFTP
 
-### [Cover Previewer](https://raw.githubusercontent.com/Reibies/WEB_Userscripts/master/Mangaupdates/MU_hover_cover.user.js)
+### [Cirle FTP Playlist Maker Ultimate](https://raw.githubusercontent.com/LazyDevUserX/LazyUserScripts/CircleFTP/CircleFTP-Ultimate.js)
 <details>
-<summary>Uses the official API so it's faster and better than the older versions of this but it's bare bones so no options (yet)</summary>
+<summary>A modern Tampermonkey userscript that collects media links from CircleFTP and generates XSPF playlists.<br>
+  Supports all major video formats, cleans filenames, and exports ready-to-play playlists for VLC.<br>
+  <b>Suitable for modern hardware</b></summary>
 <img src="https://raw.githubusercontent.com/Reibies/WEB_Userscripts/master/Mangaupdates/cover_hover.png" width="400">
 </details>
 
-### [External Links](https://raw.githubusercontent.com/Reibies/WEB_Userscripts/refs/heads/master/Mangaupdates/MU_Ext_links.user.js)
+### [Cirle FTP Playlist Maker Lite](https://raw.githubusercontent.com/LazyDevUserX/LazyUserScripts/CircleFTP/CircleFTP-Lite.js)
 <details>
-<summary>Takes all links from description and makes them buttons for easy access/ 2 external site searches</summary>
-<img src="https://raw.githubusercontent.com/Reibies/WEB_Userscripts/master/Mangaupdates/MU_externalLinks.png" width="400">
+<summary>A lighweight userscript that collects media links from CircleFTP and exports XSPF playlists ready to play on VLC.<br>
+  <b>Optimized for older hardware</b></summary>
+<img src="https://raw.githubusercontent.com/Reibies/WEB_Userscripts/master/Mangaupdates/cover_hover.png" width="400">
 </details>
 
 ### [GridView](https://raw.githubusercontent.com/Reibies/WEB_Userscripts/refs/heads/master/Mangaupdates/MU_GridView.user.js)
