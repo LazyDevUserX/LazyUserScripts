@@ -7,8 +7,8 @@
 // @match        https://online.udvash-unmesh.com/Account/Login*
 // @match        https://online.udvash-unmesh.com/Account/Password*
 // @grant        none
-// @downloadURL  https://raw.githubusercontent.com/LazyDevUserX/LazyUserScripts/refs/main/Udvash/UV-Auto-Login.user.js
-// @updateURL    https://raw.githubusercontent.com/LazyDevUserX/LazyUserScripts/refs/main/Udvash/UV-Auto-Login.user.js
+// @downloadURL  https://raw.githubusercontent.com/LazyDevUserX/LazyUserScripts/refs/heads/main/Udvash/UV-Auto-Login.user.js
+// @updateURL    https://raw.githubusercontent.com/LazyDevUserX/LazyUserScripts/refs/heads/main/Udvash/UV-Auto-Login.user.js
 // @run-at       document-idle
 // ==/UserScript==
 
