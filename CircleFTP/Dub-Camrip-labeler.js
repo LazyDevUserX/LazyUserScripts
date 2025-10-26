@@ -1,11 +1,13 @@
 // ==UserScript==
 // @name         Circle FTP Dub And CamRip Labeler
 // @namespace    http://tampermonkey.net/
-// @version      1.0.1
+// @version      1.0.3
 // @author       LaxyDevUserX
 // @match        http://new.circleftp.net/*
 // @grant        none
-//@icon          https://raw.githubusercontent.com/LazyDevUserX/LazyUserScripts/refs/heads/main/CircleFTP/assets/DUB_CAM.png
+// @downloadURL  https://raw.githubusercontent.com/LazyDevUserX/LazyUserScripts/refs/heads/main/CircleFTP/Dub-Camrip-labeler.js
+// @updateURL    https://raw.githubusercontent.com/LazyDevUserX/LazyUserScripts/refs/heads/main/CircleFTP/CircleFTP/Dub-Camrip-labeler.js
+// @icon         https://raw.githubusercontent.com/LazyDevUserX/LazyUserScripts/refs/heads/main/CircleFTP/assets/DUB_CAM.png
 // ==/UserScript==
 
 (function() {
