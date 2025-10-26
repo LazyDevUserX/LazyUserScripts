@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Udvash Unmesh Auto-Login
 // @namespace    http://tampermonkey.net/
-// @version      1.0.1
-// @description  Autofills Reg and Pass on Udvash Unmesh ASAP
+// @version      1.0.2
+// @description  Autofills Registration Number and Password on Udvash Unmesh Login Page
 // @author       LazyDevUserX
 // @match        https://online.udvash-unmesh.com/Account/Login*
 // @match        https://online.udvash-unmesh.com/Account/Password*
