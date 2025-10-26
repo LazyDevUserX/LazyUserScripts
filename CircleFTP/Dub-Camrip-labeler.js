@@ -2,10 +2,10 @@
 // @name         Circle FTP Dub And CamRip Labeler
 // @namespace    http://tampermonkey.net/
 // @version      1.0.1
-// @description  Adds DUB and CAM RIP labels to thumbnails on CircleFTP
 // @author       LaxyDevUserX
 // @match        http://new.circleftp.net/*
 // @grant        none
+//@icon          https://raw.githubusercontent.com/LazyDevUserX/LazyUserScripts/refs/heads/main/CircleFTP/assets/DUB_CAM.png
 // ==/UserScript==
 
 (function() {
