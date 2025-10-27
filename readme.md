@@ -5,21 +5,21 @@ Userscript requirements: [Tampermonkey](https://www.tampermonkey.net/) Or
 Image previews will be within the dropdown arrows.
 
 ---
-### <img src="https://raw.githubusercontent.com/LazyDevUserX/LazyUserScripts/refs/heads/main/CircleFTP/CircleFTP.png" width="20"> CircleFTP
+### <img src="https://raw.githubusercontent.com/LazyDevUserX/LazyUserScripts/refs/heads/main/CircleFTP/assets/CircleFTP.png" width="20"> CircleFTP
 
 ### [Cirle FTP Playlist Maker Ultimate](https://raw.githubusercontent.com/LazyDevUserX/LazyUserScripts/refs/heads/main/CircleFTP/CircleFTP-Ultimate.js)
 <details>
 <summary>A modern Tampermonkey userscript that collects media links from CircleFTP and generates XSPF playlists.<br>
   Supports all major video formats, cleans filenames, and exports ready-to-play playlists for VLC.<br>
   <b>Suitable for modern hardware</b></summary>
-<img src="https://raw.githubusercontent.com/Reibies/WEB_Userscripts/master/Mangaupdates/cover_hover.png" width="400">
+<img src="https://raw.githubusercontent.com/LazyDevUserX/LazyUserScripts/refs/heads/main/CircleFTP/assets/Ultimate.jpeg">
 </details>
 
 ### [Cirle FTP Playlist Maker Lite](https://raw.githubusercontent.com/LazyDevUserX/LazyUserScripts/refs/heads/main/CircleFTP/CircleFTP-Lite.js)
 <details>
 <summary>A lighweight userscript that collects media links from CircleFTP and exports XSPF playlists ready to play on VLC.<br>
   <b>Optimized for older hardware</b></summary>
-<img src="https://raw.githubusercontent.com/Reibies/WEB_Userscripts/master/Mangaupdates/cover_hover.png" width="400">
+<img src="https://raw.githubusercontent.com/LazyDevUserX/LazyUserScripts/refs/heads/main/CircleFTP/assets/Lite.png">
 </details>
 
 ### [GridView](https://raw.githubusercontent.com/Reibies/WEB_Userscripts/refs/heads/master/Mangaupdates/MU_GridView.user.js)
