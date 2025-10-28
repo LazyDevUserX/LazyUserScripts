@@ -9,6 +9,7 @@
 // @grant        none
 // @downloadURL  https://raw.githubusercontent.com/LazyDevUserX/LazyUserScripts/refs/heads/main/Udvash/UV-Auto-Login.user.js
 // @updateURL    https://raw.githubusercontent.com/LazyDevUserX/LazyUserScripts/refs/heads/main/Udvash/UV-Auto-Login.user.js
+// @icon         https://raw.githubusercontent.com/LazyDevUserX/LazyUserScripts/refs/heads/main/Udvash/assets/UV.png
 // @run-at       document-start
 // ==/UserScript==
 (function() {
