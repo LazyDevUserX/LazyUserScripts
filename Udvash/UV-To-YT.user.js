@@ -1,10 +1,13 @@
 // ==UserScript==
 // @name         Udvash To YouTube
 // @namespace    http://tampermonkey.net/
-// @version      4.1
+// @version      1.0.1
 // @description  Adds a button to UV website to watch classes directly in Youtube
 // @author       LazyDevUserX
 // @match        https://online.udvash-unmesh.com/Routine/ClassDetails*
+// @downloadURL  https://raw.githubusercontent.com/LazyDevUserX/LazyUserScripts/refs/heads/main/Udvash/UV-To-YT.user.js
+// @updateURL    https://raw.githubusercontent.com/LazyDevUserX/LazyUserScripts/refs/heads/main/Udvash/UV-To-YT.user.js
+// @icon         https://raw.githubusercontent.com/LazyDevUserX/LazyUserScripts/refs/heads/main/Udvash/assets/UV.png
 // @grant        GM_addStyle
 // ==/UserScript==
 
