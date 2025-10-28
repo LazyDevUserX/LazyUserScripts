@@ -31,10 +31,10 @@ Image previews will be within the dropdown arrows.
 Install the script add credentials and voila no need to manually login ever again.</summary>
 </details>
 
-### [Udvash TO Youtube](https://raw.githubusercontent.com/LazyDevUserX/LazyUserScripts/refs/heads/main/CircleFTP/CircleFTP-Lite.js)
+### [Udvash To Youtube](https://raw.githubusercontent.com/LazyDevUserX/LazyUserScripts/refs/heads/main/Udvash/UV-to-YT.user.js)
 <details>
 <summary>A lighweight userscript that adds the options to copy the YT link or to open the class directly into Youtube.<br>
 </summary>
-<img src="https://raw.githubusercontent.com/LazyDevUserX/LazyUserScripts/refs/heads/main/CircleFTP/assets/Lite.png">
+<img src="https://raw.githubusercontent.com/LazyDevUserX/LazyUserScripts/refs/heads/main/Udvash/assets/UV_YT.jpeg">
 </details>
 ---
