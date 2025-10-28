@@ -1,38 +1,55 @@
 // ==UserScript==
 // @name         Udvash Unmesh Auto-Login
 // @namespace    http://tampermonkey.net/
-// @version      1.0.2
-// @description  Autofills Registration Number and Password on Udvash Unmesh Login Page
+// @version      2.0.1
+// @description  Autofills Registration Number and Password on Udvash Unmesh Login Page.
 // @author       LazyDevUserX
 // @match        https://online.udvash-unmesh.com/Account/Login*
 // @match        https://online.udvash-unmesh.com/Account/Password*
 // @grant        none
 // @downloadURL  https://raw.githubusercontent.com/LazyDevUserX/LazyUserScripts/refs/heads/main/Udvash/UV-Auto-Login.user.js
 // @updateURL    https://raw.githubusercontent.com/LazyDevUserX/LazyUserScripts/refs/heads/main/Udvash/UV-Auto-Login.user.js
-// @run-at       document-idle
+// @run-at       document-start
 // ==/UserScript==
-
 (function() {
-    'use strict';
+  'use strict';
 
-    // --- IMPORTANT ---
-    // Replace the placeholder values below with your actual credentials.
-    const REGISTRATION_NUMBER = "Your Registration Number";
-    const PASSWORD = "Your Password";
-    // -----------------
+  const REGISTRATION_NUMBER = 'Your Registration Number';
+  const PASSWORD = 'Your Password';
 
+  const originalWrite = Document.prototype.write;
+  Document.prototype.write = function(...args) {
+    try {
+      let html = args.join('');
+      if (html.includes('RegistrationNumber') || html.includes('Password')) {
+        html = html
+          .replace(/(id=["']RegistrationNumber["'][^>]*value=["'])([^"']*)/i, `$1${REGISTRATION_NUMBER}`)
+          .replace(/(<input[^>]+id=["']RegistrationNumber["'][^>]*)(?<!value=["'][^"']*)>/i, `$1 value="${REGISTRATION_NUMBER}">`)
+          .replace(/(id=["']Password["'][^>]*value=["'])([^"']*)/i, `$1${PASSWORD}`)
+          .replace(/(<input[^>]+id=["']Password["'][^>]*)(?<!value=["'][^"']*)>/i, `$1 value="${PASSWORD}">`);
+        args = [html];
+      }
+    } catch {}
+    return originalWrite.apply(this, args);
+  };
+
+  document.addEventListener('DOMContentLoaded', () => {
     const regField = document.getElementById('RegistrationNumber');
-    const nextButton = document.getElementById('btnSubmit');
+    const regBtn = document.getElementById('btnSubmit');
+    if (regField && regBtn) {
+      regField.value = REGISTRATION_NUMBER;
+      regBtn.click();
+      return;
+    }
+    const passField = document.getElementById('Password');
+    const loginBtn = document.querySelector('form button[type="submit"], form input[type="submit"], #btnSubmit');
+    if (passField && loginBtn) {
+      passField.value = PASSWORD;
+      loginBtn.click();
+    }
+  }, { once: true });
 
-    if (regField && nextButton) {
-        regField.value = REGISTRATION_NUMBER;
-        nextButton.click();
-        return;
-    }
-    const passwordField = document.getElementById('Password');
-    const loginButton = document.querySelector('form button[type="submit"], form input[type="submit"]');
-    if (passwordField && loginButton) {
-        passwordField.value = PASSWORD;
-        loginButton.click();
-    }
+  window.addEventListener('load', () => {
+    Document.prototype.write = originalWrite;
+  });
 })();
