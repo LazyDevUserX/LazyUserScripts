@@ -37,4 +37,12 @@ Install the script add credentials and voila no need to manually login ever agai
 </summary>
 <img src="https://raw.githubusercontent.com/LazyDevUserX/LazyUserScripts/refs/heads/main/Udvash/assets/UV_YT.jpeg">
 </details>
+
+### [Udvash To Youtube Auto Redirect](https://raw.githubusercontent.com/LazyDevUserX/LazyUserScripts/refs/heads/main/Udvash/UV-To-YT-Auto.user.js)
+
+<details>
+<summary>Opens Udvash YouTube videos directly in YouTube ReVanced app on mobile, or in a new tab on desktop.<br>
+</summary>
+<img src="https://raw.githubusercontent.com/LazyDevUserX/LazyUserScripts/refs/heads/main/Udvash/assets/UV_YT.jpeg">
+</details>
 ---
