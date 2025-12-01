@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         Pinterest Save-to-Download (Mobile)
-// @description  Replaces the "Save" button with a "Download" button on Pinterest Mobile.
-// @version      5.0
+// @name         Pinterest Mobile Downloader (Refined)
+// @description  Replaces the "Save" button with a specific "Download" button on all mobile views (Fixed & Docked).
+// @version      5.1
 // @author       ShrekBytes
 // @match        https://*.pinterest.com/*
 // @match        https://*.pinterest.*/*
@@ -13,15 +13,16 @@
   'use strict';
 
   // ===== CONFIGURATION =====
-  const SELECTORS = [
-    '.Nt6yCq.LbyOQL.ADXRXN', // User provided class
-    '[data-test-id="save-button"] button',
-    '[data-test-id="save-button"]',
-    'div[role="button"]:has(div:contains("Save"))' // Fallback
-  ];
-
+  const THEME_COLOR = '#e60023'; // Pinterest Red
+  const HOVER_COLOR = '#ad081b'; // Darker Red for visual feedback
+  
   // ===== UTILITIES =====
   const qs = (sel, root = document) => root.querySelector(sel);
+  const qsa = (sel, root = document) => root.querySelectorAll(sel);
+
+  function sanitizeFilename(filename) {
+    return (filename || 'pinterest_img').replace(/[\/\\?%*:|"<>]/g, '-').slice(0, 50);
+  }
 
   function getFileExtension(url) {
     if (!url) return '.jpg';
@@ -30,10 +31,7 @@
     return match ? match[0] : '.jpg';
   }
 
-  function sanitizeFilename(filename) {
-    return (filename || 'pinterest_img').replace(/[\/\\?%*:|"<>]/g, '-').slice(0, 50);
-  }
-
+  // ===== DOWNLOADER =====
   function downloadFile(url, filename) {
     if (!url) return false;
     const name = sanitizeFilename(filename) + getFileExtension(url);
@@ -53,36 +51,47 @@
     } catch (e) { return false; }
   }
 
-  // ===== TOAST NOTIFICATIONS =====
+  // ===== TOAST SYSTEM (THEMED) =====
   const Toast = (() => {
     let container;
-    function show(msg, type) {
+    function show(msg) {
       if (!container) {
         container = document.createElement('div');
         Object.assign(container.style, {
           position: 'fixed', top: '20px', left: '50%', transform: 'translateX(-50%)',
-          zIndex: '999999', pointerEvents: 'none', display: 'flex', flexDirection: 'column', gap: '8px'
+          zIndex: '9999999', pointerEvents: 'none', display: 'flex', flexDirection: 'column', gap: '8px', width: 'max-content'
         });
         document.body.appendChild(container);
       }
+      
       const el = document.createElement('div');
       el.textContent = msg;
       Object.assign(el.style, {
-        background: type === 'error' ? '#e60023' : '#333', color: '#fff',
-        padding: '10px 16px', borderRadius: '20px', fontSize: '14px',
-        boxShadow: '0 4px 10px rgba(0,0,0,0.2)', transition: '0.3s', opacity: '0', transform: 'translateY(-10px)'
+        background: THEME_COLOR, // Always Red
+        color: '#fff',
+        padding: '12px 20px',
+        borderRadius: '30px',
+        fontSize: '14px',
+        fontWeight: 'bold',
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Helvetica, "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", メイリオ, Meiryo, "ＭＳ Ｐゴシック", Arial, sans-serif',
+        boxShadow: '0 4px 15px rgba(0,0,0,0.3)',
+        transition: 'all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+        opacity: '0',
+        transform: 'translateY(-20px)'
       });
+      
       container.appendChild(el);
       requestAnimationFrame(() => Object.assign(el.style, { opacity: '1', transform: 'translateY(0)' }));
+      
       setTimeout(() => {
-        Object.assign(el.style, { opacity: '0', transform: 'translateY(-10px)' });
+        Object.assign(el.style, { opacity: '0', transform: 'translateY(-20px)' });
         setTimeout(() => el.remove(), 300);
-      }, 2000);
+      }, 2500);
     }
     return { show };
   })();
 
-  // ===== DATA FETCHING =====
+  // ===== PIN DATA LOGIC =====
   function getPinId() {
     const m = location.href.match(/\/pin\/([^\/?#]+)/i);
     return m ? m[1] : null;
@@ -96,8 +105,8 @@
     } catch { return null; }
   }
 
-  async function handleDownload() {
-    Toast.show('Fetching...', 'info');
+  async function startDownload() {
+    Toast.show('Fetching High-Res...');
     const pinId = getPinId();
     let url, title = document.title.replace(' | Pinterest', '').trim();
 
@@ -108,73 +117,93 @@
         title = data.grid_title || data.title || title;
       }
     }
+    // Fallback
     if (!url) url = qs('img[src*="/originals/"]')?.src || qs('div[data-test-id="visual-content-container"] img')?.src;
 
     if (url) {
-      if (downloadFile(url, title)) Toast.show('Downloading!', 'success');
-      else Toast.show('Error starting download', 'error');
+      if (downloadFile(url, title)) Toast.show('Download Started 📥');
+      else Toast.show('Error: Could not save');
     } else {
-      Toast.show('No image found', 'error');
+      Toast.show('No image found');
     }
   }
 
-  // ===== BUTTON REPLACEMENT LOGIC =====
-  function hijackButton() {
-    // Only run on Pin pages
-    if (!getPinId()) return;
-
-    let oldBtn;
-    // Find the button using the list of selectors
-    for (const sel of SELECTORS) {
-      oldBtn = qs(sel);
-      if (oldBtn) break;
-    }
-
-    // Check if valid and not already hijacked
-    if (!oldBtn || oldBtn.dataset.pmdHijacked) return;
-
-    // Clone the button to strip existing React event listeners
-    const newBtn = oldBtn.cloneNode(true);
-    newBtn.dataset.pmdHijacked = 'true';
+  // ===== HIJACKER =====
+  function scanAndHijack() {
+    // We look for ANY button-like element containing exactly "Save"
+    // This covers both the sticky footer (docked) and the main button (fixed)
+    const candidates = Array.from(qsa('div[role="button"], button'));
     
-    // Change Text: Traverse specific children or fallback to innerText
-    // We try to preserve the icon if it exists
-    const textNode = Array.from(newBtn.querySelectorAll('div')).find(d => d.textContent.trim() === 'Save');
-    if (textNode) {
-      textNode.textContent = 'Download';
-    } else {
-      // Fallback: Just replace visible text, keep structure if possible
-      newBtn.innerHTML = newBtn.innerHTML.replace('Save', 'Download');
+    candidates.forEach(btn => {
+      // Skip if already processed or incorrect text
+      if (btn.dataset.pmdHijacked || btn.innerText.trim() !== 'Save') return;
+
+      // 1. Mark as hijacked
+      btn.dataset.pmdHijacked = 'true';
+
+      // 2. Clone the node to strip Pinterest's React event listeners
+      // This is crucial for the "Docked" button to stop it from saving
+      const newBtn = btn.cloneNode(true);
+      
+      // 3. VISUAL MODIFICATION
+      // Recursively find the text node to replace "Save" with "Download 📥"
+      // while keeping the existing structure (padding, fonts) intact.
+      const textNode = findTextNode(newBtn, 'Save');
+      if (textNode) {
+        textNode.textContent = 'Download 📥';
+      } else {
+        newBtn.innerText = 'Download 📥';
+      }
+      
+      // Apply darker red background to indicate script is active
+      newBtn.style.backgroundColor = HOVER_COLOR; 
+      newBtn.style.transition = 'background-color 0.2s';
+      newBtn.style.borderColor = 'transparent'; // Remove borders if any
+
+      // 4. Attach new click handler
+      newBtn.onclick = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+        startDownload();
+      };
+
+      // 5. Replace the original button
+      if (btn.parentNode) {
+        btn.parentNode.replaceChild(newBtn, btn);
+      }
+    });
+  }
+
+  // Helper to find the specific text node "Save" deeply nested
+  function findTextNode(el, text) {
+    if (el.nodeType === 3 && el.nodeValue.trim() === text) return el;
+    for (let i = 0; i < el.childNodes.length; i++) {
+      const found = findTextNode(el.childNodes[i], text);
+      if (found) return found;
     }
-
-    // Force style to green (optional, visual indicator that it's safe to download)
-    // newBtn.style.backgroundColor = '#008a00'; 
-    // ^ Uncomment above line if you want the button to turn Green
-    
-    // Attach new listener
-    newBtn.onclick = (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      handleDownload();
-    };
-
-    // Replace in DOM
-    oldBtn.replaceWith(newBtn);
+    return null;
   }
 
   // ===== INIT =====
   function init() {
-    // Observer to catch the button when it renders (Pinterest is a SPA)
+    // Run frequently because the "Docked" button appears/disappears on scroll
     const observer = new MutationObserver(() => {
-      hijackButton();
+      scanAndHijack();
     });
+    
+    // Observe the whole body for changes
     observer.observe(document.body, { childList: true, subtree: true });
     
-    // Also try immediately
-    hijackButton();
+    // Initial run
+    scanAndHijack();
   }
 
-  document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', init) : init();
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
 
 })();
 
