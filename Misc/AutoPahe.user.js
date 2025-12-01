@@ -3,7 +3,7 @@
 // @namespace    https://animepahe.com/
 // @version      2.1
 // @description  Automatically start AnimePahe downloads, skip timers, and closes the tab
-// @author       Archiver
+// @author       LazyDevUserX 
 // @match        https://animepahe.com/*
 // @match        https://animepahe.si/*
 // @match        https://animepahe.ru/*
