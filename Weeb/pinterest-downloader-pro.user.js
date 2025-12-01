@@ -1,7 +1,6 @@
 // ==UserScript==
-// @name         Pinterest Downloader (No Login)
-// @description  Replaces the "Save" button with "Download" button for No Login HQ Download
-// @version      1.0.1
+// @name         Pinterest Downloader Pro
+// @description  Adds a Download button for uncompressed HQ downloads without login
 // @author       LazyDevUserX 
 // @match        https://*.pinterest.com/*
 // @match        https://*.pinterest.*/*
