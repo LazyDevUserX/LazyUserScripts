@@ -1,68 +1,74 @@
 // ==UserScript==
-// @name         AniChart: AniList Score Overlay
+// @name         AniChart: AniList & MAL Score Overlay (Jikan Free API)
 // @namespace    https://anichart.net/
-// @version      1.1
-// @description  Overlays accurate AniList scores on top of anime posters on AniChart.net using the AniList API.
+// @version      3.0
+// @description  Overlays AniList and MAL scores on posters using Jikan API. Mobile friendly & no API key required.
 // @author       WebDev Pro
 // @match        https://anichart.net/*
 // @grant        GM_xmlhttpRequest
 // @connect      graphql.anilist.co
+// @connect      api.jikan.moe
 // ==/UserScript==
 
 (function() {
     'use strict';
 
-    // CSS for the elegant overlay badge
+    // CSS for mobile-friendly elegant overlay
     const style = document.createElement('style');
     style.innerHTML = `
-        .anilist-score-badge {
+        .score-overlay-box {
             position: absolute;
-            top: 8px;
-            right: 8px;
-            background: rgba(31, 38, 49, 0.85);
-            color: #edf1f5;
-            padding: 4px 8px;
-            border-radius: 6px;
+            top: 6px;
+            left: 6px;
+            right: 6px;
+            display: flex;
+            justify-content: space-between;
+            pointer-events: none;
+            z-index: 10;
+        }
+        .score-item {
+            background: rgba(11, 22, 34, 0.8);
+            color: #fff;
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-size: 11px;
             font-weight: 700;
-            font-size: 13px;
             backdrop-filter: blur(4px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            z-index: 5;
-            pointer-events: none;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-            transition: opacity 0.3s ease;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
-        .media-card:hover .anilist-score-badge {
-            opacity: 0.2; /* Fade out slightly on hover to not block the site's own overlay */
+        .al-label { color: #3db4f2; margin-right: 4px; }
+        .mal-label { color: #2e51a2; margin-right: 4px; }
+
+        /* Tablet/Mobile optimization */
+        @media (max-width: 768px) {
+            .score-overlay-box { top: 4px; left: 4px; right: 4px; }
+            .score-item { font-size: 9px; padding: 2px 4px; }
         }
     `;
     document.head.appendChild(style);
 
-    const scoreCache = new Map();
+    const cache = new Map();
 
-    // GraphQL query to fetch multiple scores at once for efficiency
-    const query = `
-    query ($ids: [Int]) {
-      Page {
-        media(id_in: $ids) {
-          id
-          averageScore
-        }
-      }
-    }`;
-
-    async function fetchScores(ids) {
+    // Fetch AniList score and MAL ID
+    async function getAniListData(ids) {
+        const query = `query($ids:[Int]){Page{media(id_in:$ids){id idMal averageScore}}}`;
         return new Promise((resolve) => {
             GM_xmlhttpRequest({
                 method: "POST",
                 url: "https://graphql.anilist.co",
                 headers: { "Content-Type": "application/json" },
                 data: JSON.stringify({ query, variables: { ids } }),
-                onload: (response) => {
-                    const data = JSON.parse(response.responseText);
+                onload: (res) => {
+                    const data = JSON.parse(res.responseText);
                     if (data.data && data.data.Page.media) {
                         data.data.Page.media.forEach(m => {
-                            scoreCache.set(m.id, m.averageScore);
+                            cache.set(m.id, { 
+                                al: m.averageScore ? m.averageScore + '%' : 'N/A', 
+                                malId: m.idMal 
+                            });
                         });
                     }
                     resolve();
@@ -71,45 +77,84 @@
         });
     }
 
-    async function processCards() {
-        [span_3](start_span)// Targets the media-card containers identified in the HTML[span_3](end_span)
-        const cards = document.querySelectorAll('.media-card:not([data-score-processed])');
-        const idsToFetch = [];
-        const cardMap = [];
-
-        cards.forEach(card => {
-            [span_4](start_span)const link = card.querySelector('a.cover'); //[span_4](end_span)
-            if (link) {
-                const match = link.href.match(/anime\/(\ +)/);
-                if (match) {
-                    const id = parseInt(match[1]);
-                    card.setAttribute('data-score-processed', 'true');
-                    idsToFetch.push(id);
-                    cardMap.push({ id, container: link });
-                }
-            }
-        });
-
-        if (idsToFetch.length === 0) return;
-
-        // Fetch scores in batches to stay within AniList rate limits
-        await fetchScores(idsToFetch);
-
-        cardMap.forEach(({ id, container }) => {
-            const score = scoreCache.get(id);
-            if (score) {
-                const badge = document.createElement('div');
-                badge.className = 'anilist-score-badge';
-                badge.innerText = `${score}%`;
-                container.appendChild(badge);
-            }
+    // Fetch MAL score using Jikan (Free API)
+    async function getMALScore(malId) {
+        return new Promise((resolve) => {
+            GM_xmlhttpRequest({
+                method: "GET",
+                url: `https://api.jikan.moe/v4/anime/${malId}`,
+                onload: (res) => {
+                    if (res.status === 200) {
+                        const data = JSON.parse(res.responseText);
+                        resolve(data.data.score ? data.data.score.toFixed(2) : 'N/A');
+                    } else {
+                        resolve('N/A');
+                    }
+                },
+                onerror: () => resolve('N/A')
+            });
         });
     }
 
-    // Initialize and handle dynamic loading (infinite scroll)
-    processCards();
-    const observer = new MutationObserver(processCards);
+    async function process() {
+        const cards = document.querySelectorAll('.media-card:not([data-loaded])');
+        if (cards.length === 0) return;
+
+        const ids = [];
+        const targets = [];
+
+        cards.forEach(card => {
+            [span_0](start_span)const link = card.querySelector('a.cover'); //[span_0](end_span)
+            const match = link ? link.href.match(/anime\/(\d+)/) : null;
+            if (match) {
+                const id = parseInt(match[1]);
+                card.setAttribute('data-loaded', 'true');
+                ids.push(id);
+                targets.push({ id, container: link });
+            }
+        });
+
+        if (ids.length === 0) return;
+
+        await getAniListData(ids);
+
+        for (const target of targets) {
+            const info = cache.get(target.id);
+            if (!info) continue;
+
+            // Create container
+            const box = document.createElement('div');
+            box.className = 'score-overlay-box';
+            
+            // Create AL Badge
+            const alBadge = document.createElement('div');
+            alBadge.className = 'score-item';
+            alBadge.innerHTML = `<span class="al-label">AL</span>${info.al}`;
+            box.appendChild(alBadge);
+
+            // Create MAL Badge
+            const malBadge = document.createElement('div');
+            malBadge.className = 'score-item';
+            malBadge.innerHTML = `<span class="mal-label">MAL</span>...`;
+            box.appendChild(malBadge);
+
+            target.container.appendChild(box);
+
+            // Lazy fetch MAL score to avoid Jikan rate limits (1 request per second)
+            if (info.malId) {
+                getMALScore(info.malId).then(score => {
+                    malBadge.innerHTML = `<span class="mal-label">MAL</span>${score}`;
+                });
+            } else {
+                malBadge.innerHTML = `<span class="mal-label">MAL</span>N/A`;
+            }
+        }
+    }
+
+    // Initial run and infinite scroll observer
+    process();
+    const observer = new MutationObserver(() => process());
     observer.observe(document.body, { childList: true, subtree: true });
 
 })();
-                        
+                          
