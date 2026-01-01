@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Circle FTP Dub And CamRip Labeler
 // @namespace    http://tampermonkey.net/
-// @version      1.0.3
+// @version      1.0.4
 // @author       LaxyDevUserX
 // @match        http://new.circleftp.net/*
 // @grant        none
