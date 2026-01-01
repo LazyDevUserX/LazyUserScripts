@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         CircleFTP Enhancer (alpha)
+// @name         CircleFTP Enhanced (PreAlpha)
 // @namespace    http://tampermonkey.net/
-// @version      2.1
+// @version      1.0.3
 // @description  Addds various enhacements to CircleFTP
 // @match        *://new.circleftp.net/content/*
 // @grant        GM_addStyle
