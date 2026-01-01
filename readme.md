@@ -22,11 +22,11 @@ Image previews will be within the dropdown arrows.
 <img src="https://raw.githubusercontent.com/LazyDevUserX/LazyUserScripts/refs/heads/main/CircleFTP/assets/Lite.png">
 </details>
 
-### [CirleFTP Enhanced (PreAlpha)](https://raw.githubusercontent.com/LazyDevUserX/LazyUserScripts/refs/heads/main/CircleFTP/)
+### [CirleFTP Enhanced (PreAlpha)](https://raw.githubusercontent.com/LazyDevUserX/LazyUserScripts/refs/heads/main/CircleFTP/CircleFTP-Enhaced.user.js)
 <details>
-<summary>A lighweight userscript that collects media links from CircleFTP and exports XSPF playlists ready to play on VLC.<br>
+<summary>Modern UI/UX overhaul for CircleFTP content pages<br>
   <b>Optimized for older hardware</b></summary>
-<img src="https://raw.githubusercontent.com/LazyDevUserX/LazyUserScripts/refs/heads/main/CircleFTP/assets/">
+<img src="https://raw.githubusercontent.com/LazyDevUserX/LazyUserScripts/refs/heads/main/CircleFTP/assets/EnhacedCircleFTP.jpeg">
 </details>
 
 ---
