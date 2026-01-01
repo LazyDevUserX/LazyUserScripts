@@ -7,7 +7,7 @@
 // @grant        none
 // @downloadURL  https://raw.githubusercontent.com/LazyDevUserX/LazyUserScripts/refs/heads/main/CircleFTP/Dub-Camrip-labeler.user.js
 // @updateURL    https://raw.githubusercontent.com/LazyDevUserX/LazyUserScripts/refs/heads/main/CircleFTP/Dub-Camrip-labeler.user.js
-// @icon         https://raw.githubusercontent.com/LazyDevUserX/LazyUserScripts/refs/heads/main/CircleFTP/assets/DUB_CAM.png
+// @icon         https://raw.githubusercontent.com/LazyDevUserX/LazyUserScripts/refs/heads/main/CircleFTP/assets/DUB_CAM%40icon.png
 // ==/UserScript==
 
 (function() {
